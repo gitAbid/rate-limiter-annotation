@@ -1,4 +1,4 @@
-package com.abid.ratelimiterannotation
+package com.abid.rate.limiter.example
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
