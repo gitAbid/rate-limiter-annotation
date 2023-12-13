@@ -1,7 +1,6 @@
 package com.abid.annotation.processor.aspect
 
 import com.abid.annotation.core.annotation.RateLimit
-import com.abid.annotation.core.annotation.SharedRateLimit
 import com.abid.annotation.service.RateLimiterService
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -28,25 +27,21 @@ class RateLimiterAspect(private val rateLimiterService: RateLimiterService) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Around("@annotation(com.abid.annotation.core.annotation.RateLimit)")
-    @Throws(Throwable::class)
     fun rateLimit(joinPoint: ProceedingJoinPoint): Any {
         val methodSignature = joinPoint.signature as MethodSignature
         val key = methodSignature.method.toGenericString()
         val annotation: RateLimit = methodSignature.method.getAnnotation(RateLimit::class.java)
         rateLimiterService.applyLimit(key, annotation.limit, annotation.useLimit)
-        logger.info("Rate limit applied")
+        logger.trace("Rate limit applied")
         return joinPoint.proceed()
-
     }
 
 
     @Around("@annotation(com.abid.annotation.core.annotation.SharedRateLimit)")
-    @Throws(Throwable::class)
     fun sharedRateLimit(joinPoint: ProceedingJoinPoint): Any {
         rateLimiterService.applySharedLimit()
-        logger.info("Shared Rate limit applied")
+        logger.trace("Shared Rate limit applied")
         return joinPoint.proceed()
-
     }
 }
 

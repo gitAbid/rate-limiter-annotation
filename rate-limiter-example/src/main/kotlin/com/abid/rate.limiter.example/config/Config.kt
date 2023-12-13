@@ -7,6 +7,7 @@ import com.abid.annotation.limiter.RateLimiterClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
+import org.springframework.web.bind.annotation.ControllerAdvice
 
 /**
  * (C) Copyright 2005-2023 hSenid Software International (Pvt) Limited.
@@ -21,14 +22,15 @@ import org.springframework.core.annotation.Order
  */
 @Configuration
 @EnableRateLimiting
+@ControllerAdvice
 class Config {
 
     @Bean
     @Order
     fun rateLimitConfig() = RateLimiterConfig().apply {
         maxLimitForSharedRateLimiter = 10
-        maxLimitForRateLimiter = 5
-        onLimitReachedPolicy = LimitReachedPolicy.TO_MANY_REQUESTS
+        maxLimitForRateLimiter = 500
+        onLimitReachedPolicy = LimitReachedPolicy.THROTTLE
         limiterClient = RateLimiterClient.Type.GUAVA
     }
 }

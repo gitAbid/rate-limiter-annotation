@@ -1,6 +1,7 @@
 package com.abid.annotation.limiter.impl
 
 import com.abid.annotation.core.config.LimitReachedPolicy
+import com.abid.annotation.exception.MaxRateLimitReachedException
 import com.abid.annotation.exception.ToManyRequestException
 import com.abid.annotation.limiter.RateLimiterClient
 import com.google.common.util.concurrent.RateLimiter
@@ -32,15 +33,12 @@ class GuavaRateLimiterClient : RateLimiterClient {
             LimitReachedPolicy.THROTTLE -> rateLimiter.acquire()
             LimitReachedPolicy.TO_MANY_REQUESTS -> {
                 val tryAcquire = rateLimiter.tryAcquire()
-                println("TO_MANY_REQUESTS -> $tryAcquire")
                 if (!tryAcquire) throw ToManyRequestException()
             }
 
             LimitReachedPolicy.EXCEPTION -> {
                 val tryAcquire = rateLimiter.tryAcquire()
-                println("EXCEPTION -> $tryAcquire")
-
-                if (!tryAcquire) throw ToManyRequestException()
+                if (!tryAcquire) throw MaxRateLimitReachedException()
             }
         }
     }

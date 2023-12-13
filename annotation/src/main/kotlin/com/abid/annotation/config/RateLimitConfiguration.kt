@@ -23,8 +23,6 @@ import org.springframework.context.annotation.Configuration
 @ComponentScan("com.abid.annotation")
 class RateLimitConfiguration(private val context: ApplicationContext) {
 
-
-
     @Bean
     fun rateLimiterConfig() = runCatching { context.getBean(RateLimiterConfig::class.java) }
         .onFailure { RateLimiterConfig() }
